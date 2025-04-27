@@ -80,7 +80,7 @@ public class LinearRegressionCalculator {
 
 
         for (int i = 0; i < numberofData; i++) {
-            System.out.println("\n" + i+1 + "-----⬇️");
+            System.out.println("\n" + (i+1) + "-----⬇️");
 
             System.out.println("Enter (X) Independent Value");
             double xValue = input.nextDouble();
