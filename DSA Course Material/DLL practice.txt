@@ -1,0 +1,87 @@
+Add a new task at the beginning of the list.
+
+Time complexity: O(1)
+
+Delete a task from the list by matching the title.
+
+Time complexity: O(n)
+
+Search for a task with a specific title.
+
+Time complexity: O(n)
+
+Sort the tasks by priority (higher number = higher priority).
+
+Time complexity: O(n²) if using bubble sort on linked list
+
+
+
+
+
+
+class Task {
+    String title;
+    String description;
+    int priority;
+    Task prev, next;
+
+    Task(String title, String description, int priority) {
+        this.title = title;
+        this.description = description;
+        this.priority = priority;
+        this.prev = this.next = null;
+    }
+}
+
+class TaskList {
+    Task head;
+
+    // 1. Add task at beginning
+    void addTask(String title, String desc, int priority) {
+        Task newTask = new Task(title, desc, priority);
+        newTask.next = head;
+        if (head != null) head.prev = newTask;
+        head = newTask;
+    }
+
+    // 2. Delete task by title
+    void deleteTask(String title) {
+        Task temp = head;
+        while (temp != null) {
+            if (temp.title.equals(title)) {
+                if (temp.prev != null) temp.prev.next = temp.next;
+                else head = temp.next;
+                if (temp.next != null) temp.next.prev = temp.prev;
+                return;
+            }
+            temp = temp.next;
+        }
+    }
+
+    // 3. Search for a task
+    boolean searchTask(String title) {
+        Task temp = head;
+        while (temp != null) {
+            if (temp.title.equals(title)) return true;
+            temp = temp.next;
+        }
+        return false;
+    }
+
+    // 4. Sort tasks by priority
+    void sortTasksByPriority() {
+        if (head == null) return;
+        for (Task i = head; i != null; i = i.next) {
+            for (Task j = i.next; j != null; j = j.next) {
+                if (j.priority > i.priority) {
+                    // Swap data
+                    int p = i.priority;
+                    i.priority = j.priority;
+                    j.priority = p;
+
+                    String t = i.title; i.title = j.title; j.title = t;
+                    String d = i.description; i.description = j.description; j.description = d;
+                }
+            }
+        }
+    }

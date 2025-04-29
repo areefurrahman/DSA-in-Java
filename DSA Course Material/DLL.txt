@@ -1,0 +1,122 @@
+class Node{
+    int data;
+    Node next;
+    Node prev;
+    Node(int data)
+    {
+        this.data = data;
+        this.next = null;
+        this.prev = null;
+    }
+}
+class DLL {
+    Node head;
+
+    void printList(Node head) {
+        Node current = head;
+        while (current != null) {
+            System.out.print(current.data + " -> ");
+            current = current.next;
+        }
+        System.out.println("null");
+    }
+
+    void printList2(Node tail) {
+        Node current = tail;
+        while (current != null) {
+            System.out.print(current.data + " -> ");
+            current = current.prev;
+        }
+        System.out.println("null");
+    }
+
+    void printList3(Node rand) {
+        Node current = rand;
+        while (current.prev != null) {
+            current = current.prev;
+        }
+        while (current != null) {
+            System.out.print(current.data + " -> ");
+            current = current.next;
+        }
+        System.out.println("null");
+    }
+
+    void insert_head(Node head, int data) {
+
+        Node new_Node = new Node(data);
+        new_Node.next = head;
+        new_Node.prev = null;
+        head.prev = new_Node;
+        head = new_Node;
+    }
+    void insert_tail(Node head, int data) {
+        Node current = head;
+        while(current.next!= null)
+        {
+            current= current.next;
+        }
+        Node new_Node = new Node(data);
+        current.next = new_Node;
+        new_Node.prev = current;
+        new_Node.next = null;
+    }
+    void insert_after_index(Node head, int index, int data) {
+        Node current = head;
+        int i =0;
+
+        if (index<0)
+        {
+            return;
+        }
+        while(current!= null && i<index-1)
+        {
+            current= current.next;
+            i++;
+        }
+        if(current==null)
+        {
+            System.out.println("out of bound!");
+            return;
+        }
+        Node new_Node = new Node(data);
+        new_Node.next = current.next;
+        new_Node.prev = current;
+
+        if(current.next!=null)
+        {
+            current.next.prev = new_Node;
+        }
+
+        current.next = new_Node;
+    }
+}
+class Main{
+    public static void main(String args[])
+    {
+        DLL linkedlist = new DLL();
+
+        Node a = new Node(4);
+        Node b = new Node (5);
+        Node c = new Node (6);
+        Node d = new Node (7);
+        a.prev = null;
+        a.next = b;
+        b.next = c;
+        b.prev = a;
+        c.next = d;
+        c.prev = b;
+        d.next = null;
+        d.prev = c;
+
+        linkedlist.printList(a);
+        linkedlist.printList2(d);
+        linkedlist.printList3(c);
+        linkedlist.insert_head(a, 10);
+        linkedlist.printList3(a);
+        linkedlist.insert_tail(a, 9);
+        linkedlist.printList3(a);
+        linkedlist.insert_after_index(a, 5, 8);
+        linkedlist.printList3(a);
+    }
+}

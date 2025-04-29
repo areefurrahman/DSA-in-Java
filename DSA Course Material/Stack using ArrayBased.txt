@@ -1,0 +1,59 @@
+class ArrayStack {
+    private int top = -1;
+    private int[] stack = new int[5];
+
+    // Push operation
+    public void push(int value) {
+        if (top >= stack.length - 1) {
+            System.out.println("Stack Overflow");
+            return;
+        }
+        stack[++top] = value;
+    }
+
+    // Pop operation
+    public int pop() {
+        if (top == -1) {
+            System.out.println("Stack Underflow");
+            return -1;
+        }
+        return stack[top--];
+    }
+
+    // Peek operation
+    public int peek() {
+        return top == -1 ? -1 : stack[top];
+    }
+
+    // Display stack content
+    public void printStack() {
+        if (top == -1) {
+            System.out.println("Stack is empty");
+            return;
+        }
+        System.out.print("Stack contents: ");
+        for (int i = 0; i <= top; i++) {
+            System.out.print(stack[i] + " ");
+        }
+        System.out.println();
+    }
+    
+    public static void main(String[] args) {
+        ArrayStack stack = new ArrayStack();
+
+        stack.push(10);
+        stack.push(20);
+        stack.push(30);
+        stack.printStack(); // Output: 10 20 30
+
+        System.out.println("Peek: " + stack.peek()); // Output: 30
+
+        System.out.println("Popped: " + stack.pop()); // Output: 30
+        stack.printStack(); // Output: 10 20
+
+        stack.push(40);
+        stack.push(50);
+        stack.push(60); // Will trigger overflow
+        stack.printStack();
+    }
+}

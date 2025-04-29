@@ -1,0 +1,67 @@
+class Node {
+    String action;
+    Node prev;
+    Node next;
+
+    Node(String action) {
+        this.action = action;
+        this.prev = null;
+        this.next = null;
+    }
+}
+class TextEditor {
+    private Node head;
+    private Node tail;
+    private Node current;
+
+    public void addAction(String action) {
+        Node newNode = new Node(action);
+
+        if (current == null) {
+            head = tail = current = newNode;
+        } else {
+            current.next = null;
+            tail = current;
+
+            current.next = newNode;
+            newNode.prev = current;
+            current = tail = newNode;
+        }
+    }
+
+    public void undo() {
+        if (current != null && current.prev != null) {
+            current = current.prev;
+            System.out.println("Undo: " + current.action);
+        } else {
+            System.out.println("Nothing to undo.");
+        }
+    }
+
+    public void redo() {
+        if (current != null && current.next != null) {
+            current = current.next;
+            System.out.println("Redo: " + current.action);
+        } else {
+            System.out.println("Nothing to redo.");
+        }
+    }
+
+    public void clearActions() {
+        head = tail = current = null;
+        System.out.println("All actions cleared.");
+    }
+    public static void main (String args[])
+    {
+        TextEditor editor = new TextEditor();
+        editor.addAction("Typed 'H'");
+        editor.addAction("Typed 'e'");
+        editor.addAction("Typed 'l'");
+        editor.undo(); // goes back to "Typed 'e'"
+        editor.undo(); // goes back to "Typed 'H'"
+        editor.redo(); // goes forward to "Typed 'e'"
+        editor.addAction("Typed 'y'"); // deletes redo history ("Typed 'l'"), adds "Typed 'y'"
+        editor.clearActions(); // clears everything
+    }
+
+}

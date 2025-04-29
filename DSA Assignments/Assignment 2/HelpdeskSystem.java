@@ -23,6 +23,7 @@ class HelpdeskQueue {
         Customer customer = new Customer(name, issueDescription);
         queue.add(customer);
         System.out.println("Customer added to the queue.");
+
     }
 
     public void dequeue() {

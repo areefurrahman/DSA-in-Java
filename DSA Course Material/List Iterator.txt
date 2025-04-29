@@ -1,0 +1,63 @@
+ListIterator is a bi-directional iterator specifically for lists like ArrayList and LinkedList.
+
+It allows you to:
+
+Traverse forwards and backwards.
+
+Add, remove, or replace elements during iteration.
+
+Check positions with index-based methods.
+
+
+Declaration:
+ListIterator<Type> iterator = list.listIterator();
+
+Key Methods:
+Method			Description
+hasNext()		Returns true if there is a next element
+next()			Returns the next element
+hasPrevious()		Returns true if there is a previous element
+previous()		Returns the previous element
+nextIndex()		Index of the element that would be returned by next()
+previousIndex()		Index of the element that would be returned by previous()
+remove()		Removes the last element returned by next() or previous()
+set(E e)		Replaces the last element returned with the specified one
+add(E e)		Inserts the specified element into the list
+
+
+Example Code:
+import java.util.*;
+
+public class ListIterator {
+    public static void main(String[] args) {
+        List<String> names = new ArrayList<>(Arrays.asList("Ali", "Amna", "Ayesha"));
+
+        ListIterator<String> it = names.listIterator();
+
+        System.out.println("Forward traversal:");
+        while (it.hasNext()) {
+            String name = it.next();
+            System.out.println(name);
+        }
+
+        System.out.println("\nBackward traversal:");
+        while (it.hasPrevious()) {
+            String name = it.previous();
+            System.out.println(name);
+        }
+
+        System.out.println("\nModifying list:");
+        it = names.listIterator();
+        while (it.hasNext()) {
+            String name = it.next();
+            if (name.equals("Amna")) {
+                it.set("Hassan"); 
+            }
+            if (name.equals("Ayesha")) {
+                it.add("Danish"); //add after ayesha
+            }
+        }
+
+        System.out.println("Updated List: " + names);
+    }
+}

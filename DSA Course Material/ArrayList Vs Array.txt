@@ -1,0 +1,47 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
+class ArrayListvsArray {
+    public static void main(String[] args) {
+
+        String[] friendsArray = new String[5];
+
+        String[] friendArray2 = {"Ali", "Ahmed", "Hassan", "Amna"};
+
+        ArrayList<String> friendsArrayList = new ArrayList<>();
+
+        ArrayList<Integer> numbers = new ArrayList<Integer>();
+
+
+        ArrayList<String> friendsArrayList2 =
+                new ArrayList<>(Arrays.asList("Ali", "Ahmed", "Hassan", "Amna"));
+
+        System.out.println(friendsArrayList2);
+        System.out.println(friendArray2[1]);
+        System.out.println(friendsArrayList2.get(1));
+
+        System.out.println(friendArray2.length);
+        System.out.println(friendsArrayList2.size());
+
+        friendsArrayList2.add("Maria");
+        System.out.println(friendsArrayList2);
+
+        friendArray2[0] = "Ayesha";
+        System.out.println(friendArray2[0]);
+        friendsArrayList2.set(0, "Ayesha");
+
+        System.out.println(friendsArrayList2.get(0));
+
+        //remove the element
+        friendsArrayList2.remove(0);
+        System.out.println(friendsArrayList2);
+
+        friendsArrayList2.remove("Maria");
+        System.out.println(friendsArrayList2);
+
+        //no method for removing from an array
+        System.out.println(friendArray2);
+        System.out.println(friendsArrayList2);
+
+    }
+}

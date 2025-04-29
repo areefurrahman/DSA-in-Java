@@ -1,0 +1,67 @@
+void insertAtPosition(int data, int position) {
+        Node newNode = new Node(data);
+        if (position == 0) {
+            newNode.next = head;
+            head = newNode;
+            return;
+        }
+        
+        Node current = head;
+        for (int i = 0; i < position - 1 && current != null; i++) {
+            current = current.next;
+        }
+        
+        if (current == null) {
+            System.out.println("Position out of bounds");
+            return;
+        }
+
+        newNode.next = current.next;
+        current.next = newNode;
+    }
+}
+
+    void insertAfter(Node prevNode, int data) {
+        if (prevNode == null) {
+            System.out.println("Previous node cannot be null");
+            return;
+        }
+
+        Node newNode = new Node(data);
+        newNode.next = prevNode.next;
+        prevNode.next = newNode;
+    }
+}
+
+
+void insertBefore(Node nextNode, int data) {
+        if (head == null || nextNode == null) {
+            System.out.println("List is empty or nextNode is null");
+            return;
+        }
+
+        Node newNode = new Node(data);
+
+        // If inserting before the head
+        if (head == nextNode) {
+            newNode.next = head;
+            head = newNode;
+            return;
+        }
+
+        // Find the node before nextNode
+        Node current = head;
+        while (current.next != null && current.next != nextNode) {
+            current = current.next;
+        }
+
+        // If nextNode is not found
+        if (current.next == null) {
+            System.out.println("The given node is not present in the list");
+            return;
+        }
+
+        newNode.next = nextNode;
+        current.next = newNode;
+    }
+}

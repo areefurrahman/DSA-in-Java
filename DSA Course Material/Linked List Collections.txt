@@ -1,0 +1,57 @@
+import java.util.LinkedList;
+
+public class LinkedListExample {
+    public static void main(String[] args) {
+        // Create a LinkedList of Strings
+        LinkedList<String> list = new LinkedList<>();
+
+        // Adding elements
+        list.add("A");  // Adds "A" to the end
+        list.add("B");  // Adds "B" to the end
+        list.add(1, "C");  // Inserts "C" at index 1
+        list.addFirst("X");  // Adds "X" at the beginning
+        list.addLast("Z");  // Adds "Z" at the end
+
+        // Print the list after adding elements
+        printList(list);
+
+        // Removing elements
+        list.remove();  // Removes first element ("X")
+        list.remove(2);  // Removes element at index 2 ("B")
+        list.removeFirst();  // Removes first element ("A")
+        list.removeLast();  // Removes last element ("Z")
+
+        // Print the list after removals
+        printList(list);
+
+        // Adding more elements
+        list.add("Y");  // Adds "Y" to the end
+        list.add("Z");  // Adds "Z" to the end
+
+        // Print the list before polling
+        printList(list);
+
+        // Polling elements (retrieve & remove)
+        list.poll();  // Retrieves & removes first element ("C")
+        list.pollFirst();  // Retrieves & removes first element ("Y")
+        list.pollLast();  // Retrieves & removes last element ("Z")
+
+        // Print the list after polling
+        printList(list);
+    }
+
+    /**
+     * Prints all elements of the LinkedList.
+     * @param list The LinkedList to print.
+     */
+    public static void printList(LinkedList<String> list) {
+        System.out.print("LinkedList Elements: ");
+        
+        // Iterate through each element and print it
+        for (String element : list) {
+            System.out.print(element + " ");
+        }
+        
+        System.out.println();  // Move to the next line for better formatting
+    }
+}
