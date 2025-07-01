@@ -1,0 +1,938 @@
+////////////////  BST  /////////////////////////////////////////////////////////////////////////////
+
+
+class Node {
+    int data;
+    Node left, right;
+
+    public Node(int value) {
+        data = value;
+        left = right = null;
+    }
+}
+
+class BST {
+    public Node root;
+
+    public Node insert(Node root, int value) {
+        if (root == null) {
+            return new Node(value);
+        }
+        if (value < root.data)
+            root.left = insert(root.left, value);
+        else if (value > root.data)
+            root.right = insert(root.right, value);
+
+        return root;
+    }
+
+    public boolean search(Node root, int key) {
+        if (root == null) return false;
+        if (key == root.data) return true;
+        if (key < root.data)
+            return search(root.left, key);
+        else
+            return search(root.right, key);
+    }
+
+    Node deleteNode(Node root, int key) {
+        if (root == null) return null;
+
+        if (key < root.data) {
+            root.left = deleteNode(root.left, key);
+        } else if (key > root.data) {
+            root.right = deleteNode(root.right, key);
+        } else {
+            if (root.left == null)
+                return root.right;
+            else if (root.right == null)
+                return root.left;
+
+            root.data = minValue(root.right);
+            root.right = deleteNode(root.right, root.data);
+        }
+
+        return root;
+    }
+
+    int minValue(Node root) {
+        int min = root.data;
+        while (root.left != null) {
+            min = root.left.data;
+            root = root.left;
+        }
+        return min;
+    }
+
+    public void preOrder(Node root) {
+        if (root != null) {
+            System.out.print(root.data + " ");
+            preOrder(root.left);
+            preOrder(root.right);
+        }
+    }
+
+    public void inOrder(Node root) {
+        if (root != null) {
+            inOrder(root.left);
+            System.out.print(root.data + " ");
+            inOrder(root.right);
+        }
+    }
+
+    public void postOrder(Node root) {
+        if (root != null) {
+            postOrder(root.left);
+            postOrder(root.right);
+            System.out.print(root.data + " ");
+        }
+    }
+}
+
+public class BST_Using_LinkedList {
+    public static void main(String[] args) {
+        BST bst = new BST();
+
+        int[] values = {50, 30, 70, 20, 40, 60, 80};
+        for (int val : values) {
+            bst.root = bst.insert(bst.root, val);
+        }
+
+        System.out.print("In-order: ");
+        bst.inOrder(bst.root);
+        System.out.println();
+
+        System.out.print("Pre-order: ");
+        bst.preOrder(bst.root);
+        System.out.println();
+
+        System.out.print("Post-order: ");
+        bst.postOrder(bst.root);
+        System.out.println();
+
+        System.out.println("Search 40: " + bst.search(bst.root, 40));
+        System.out.println("Search 100: " + bst.search(bst.root, 100));
+
+        bst.root = bst.deleteNode(bst.root, 50);
+        System.out.print("In-order after deleting 50: ");
+        bst.inOrder(bst.root);
+        System.out.println();
+    }
+}
+
+
+
+
+////////////////  AVL  /////////////////////////////////////////////////////////////////////////////
+// 0111111111
+class AVLNode {
+    int key, height;
+    AVLNode left, right;
+
+    AVLNode(int d) {
+        key = d;
+        height = 1;
+    }
+}
+
+public class AVLTree {
+    AVLNode root;
+
+    // Height of node
+    int height(AVLNode node) {
+        return (node == null) ? 0 : node.height;
+    }
+
+    // Get balance factor
+    int getBalance(AVLNode node) {
+        return (node == null) ? 0 : height(node.left) - height(node.right);
+    }
+
+    // Right rotate
+    AVLNode rightRotate(AVLNode y) {
+        AVLNode x = y.left;
+        AVLNode T2 = x.right;
+
+        x.right = y;
+        y.left = T2;
+
+        y.height = Math.max(height(y.left), height(y.right)) + 1;
+        x.height = Math.max(height(x.left), height(x.right)) + 1;
+
+        return x;
+    }
+
+    // Left rotate
+    AVLNode leftRotate(AVLNode x) {
+        AVLNode y = x.right;
+        AVLNode T2 = y.left;
+
+        y.left = x;
+        x.right = T2;
+
+        x.height = Math.max(height(x.left), height(x.right)) + 1;
+        y.height = Math.max(height(y.left), height(y.right)) + 1;
+
+        return y;
+    }
+
+    // Insert node
+    AVLNode insert(AVLNode node, int key) {
+        if (node == null)
+            return new AVLNode(key);
+
+        if (key < node.key)
+            node.left = insert(node.left, key);
+        else if (key > node.key)
+            node.right = insert(node.right, key);
+        else
+            return node; // duplicates not allowed
+
+        node.height = 1 + Math.max(height(node.left), height(node.right));
+
+        int balance = getBalance(node);
+
+        // LL
+        if (balance > 1 && key < node.left.key)
+            return rightRotate(node);
+
+        // RR
+        if (balance < -1 && key > node.right.key)
+            return leftRotate(node);
+
+        // LR
+        if (balance > 1 && key > node.left.key) {
+            node.left = leftRotate(node.left);
+            return rightRotate(node);
+        }
+
+        // RL
+        if (balance < -1 && key < node.right.key) {
+            node.right = rightRotate(node.right);
+            return leftRotate(node);
+        }
+
+        return node;
+    }
+
+    public void insert(int key) {
+        root = insert(root, key);
+    }
+
+    // Get node with minimum value
+    AVLNode minValueNode(AVLNode node) {
+        AVLNode current = node;
+        while (current.left != null)
+            current = current.left;
+        return current;
+    }
+
+    // Delete node
+    AVLNode delete(AVLNode root, int key) {
+        if (root == null)
+            return root;
+
+        if (key < root.key)
+            root.left = delete(root.left, key);
+        else if (key > root.key)
+            root.right = delete(root.right, key);
+        else {
+            if ((root.left == null) || (root.right == null)) {
+                AVLNode temp = (root.left != null) ? root.left : root.right;
+
+                if (temp == null) {
+                    root = null;
+                } else {
+                    root = temp;
+                }
+            } else {
+                AVLNode temp = minValueNode(root.right);
+                root.key = temp.key;
+                root.right = delete(root.right, temp.key);
+            }
+        }
+
+        if (root == null)
+            return root;
+
+        root.height = Math.max(height(root.left), height(root.right)) + 1;
+
+        int balance = getBalance(root);
+
+        // LL
+        if (balance > 1 && getBalance(root.left) >= 0)
+            return rightRotate(root);
+
+        // LR
+        if (balance > 1 && getBalance(root.left) < 0) {
+            root.left = leftRotate(root.left);
+            return rightRotate(root);
+        }
+
+        // RR
+        if (balance < -1 && getBalance(root.right) <= 0)
+            return leftRotate(root);
+
+        // RL
+        if (balance < -1 && getBalance(root.right) > 0) {
+            root.right = rightRotate(root.right);
+            return leftRotate(root);
+        }
+
+        return root;
+    }
+
+    public void delete(int key) {
+        root = delete(root, key);
+    }
+
+    // Search key
+    public boolean search(int key) {
+        return searchNode(root, key);
+    }
+
+    boolean searchNode(AVLNode node, int key) {
+        if (node == null)
+            return false;
+        if (key == node.key)
+            return true;
+        if (key < node.key)
+            return searchNode(node.left, key);
+        else
+            return searchNode(node.right, key);
+    }
+
+    // Traversals
+    public void inorder() {
+        System.out.print("Inorder: ");
+        inorderTraversal(root);
+        System.out.println();
+    }
+
+    void inorderTraversal(AVLNode node) {
+        if (node != null) {
+            inorderTraversal(node.left);
+            System.out.print(node.key + " ");
+            inorderTraversal(node.right);
+        }
+    }
+
+    public void preorder() {
+        System.out.print("Preorder: ");
+        preorderTraversal(root);
+        System.out.println();
+    }
+
+    void preorderTraversal(AVLNode node) {
+        if (node != null) {
+            System.out.print(node.key + " ");
+            preorderTraversal(node.left);
+            preorderTraversal(node.right);
+        }
+    }
+
+    public void postorder() {
+        System.out.print("Postorder: ");
+        postorderTraversal(root);
+        System.out.println();
+    }
+
+    void postorderTraversal(AVLNode node) {
+        if (node != null) {
+            postorderTraversal(node.left);
+            postorderTraversal(node.right);
+            System.out.print(node.key + " ");
+        }
+    }
+
+    // Main for testing
+    public static void main(String[] args) {
+        AVLTree tree = new AVLTree();
+
+        int[] keys = {20, 10, 30, 5, 15, 25, 35};
+
+        for (int key : keys)
+            tree.insert(key);
+
+        tree.inorder();   // Inorder
+        tree.preorder();  // Preorder
+        tree.postorder(); // Postorder
+
+        System.out.println("Search 25: " + tree.search(25));
+        System.out.println("Search 40: " + tree.search(40));
+
+        tree.delete(30);
+        tree.inorder();   // After deletion
+    }
+}
+
+//////// 
+public class All_Tasks {
+    class Node {
+        int key, height;
+        Node left, right;
+
+        Node(int d) {
+            key = d;
+            height = 1;
+        }
+    }
+
+    Node root;
+
+    // (task 1)
+    Node insert(Node node, int key) {
+        if (node == null)
+            return new Node(key);
+        if (key < node.key)
+            node.left = insert(node.left, key);
+        else if (key > node.key)
+            node.right = insert(node.right, key);
+        else
+            return node;
+        node.height = 1 + Math.max(height(node.left), height(node.right));
+        int balance = getBalance(node);
+        if (balance > 1 && key < node.left.key)
+            return rightRotate(node);
+        if (balance < -1 && key > node.right.key)
+            return leftRotate(node);
+        if (balance > 1 && key > node.left.key) {
+            node.left = leftRotate(node.left);
+            return rightRotate(node);
+        }
+        if (balance < -1 && key < node.right.key) {
+            node.right = rightRotate(node.right);
+            return leftRotate(node);
+        }
+        return node;
+    }
+
+    // (task 1)
+    Node deleteNode(Node root, int key) {
+        if (root == null)
+            return root;
+        if (key < root.key)
+            root.left = deleteNode(root.left, key);
+        else if (key > root.key)
+            root.right = deleteNode(root.right, key);
+        else {
+            if ((root.left == null) || (root.right == null)) {
+                Node temp = (root.left != null) ? root.left : root.right;
+                if (temp == null) {
+                    temp = root;
+                    root = null;
+                } else
+                    root = temp;
+            } else {
+                Node temp = minValueNode(root.right);
+                root.key = temp.key;
+                root.right = deleteNode(root.right, temp.key);
+            }
+        }
+        if (root == null)
+            return root;
+        root.height = Math.max(height(root.left), height(root.right)) + 1;
+        int balance = getBalance(root);
+        if (balance > 1 && getBalance(root.left) >= 0)
+            return rightRotate(root);
+        if (balance > 1 && getBalance(root.left) < 0) {
+            root.left = leftRotate(root.left);
+            return rightRotate(root);
+        }
+        if (balance < -1 && getBalance(root.right) <= 0)
+            return leftRotate(root);
+        if (balance < -1 && getBalance(root.right) > 0) {
+            root.right = rightRotate(root.right);
+            return leftRotate(root);
+        }
+        return root;
+    }
+
+    Node minValueNode(Node node) {
+        Node current = node;
+        while (current.left != null)
+            current = current.left;
+        return current;
+    }
+
+    int height(Node N) {
+        if (N == null)
+            return 0;
+        return N.height;
+    }
+
+    int getBalance(Node N) {
+        if (N == null)
+            return 0;
+        return height(N.left) - height(N.right);
+    }
+
+    Node rightRotate(Node y) {
+        Node x = y.left;
+        Node T2 = x.right;
+        x.right = y;
+        y.left = T2;
+        y.height = Math.max(height(y.left), height(y.right)) + 1;
+        x.height = Math.max(height(x.left), height(x.right)) + 1;
+        return x;
+    }
+
+    Node leftRotate(Node x) {
+        Node y = x.right;
+        Node T2 = y.left;
+        y.left = x;
+        x.right = T2;
+        x.height = Math.max(height(x.left), height(x.right)) + 1;
+        y.height = Math.max(height(y.left), height(y.right)) + 1;
+        return y;
+    }
+
+    void insertNode(int key) {
+        root = insert(root, key);
+    }
+
+    // (task 2)
+    void createSampleTree() {
+        insertNode(30);
+        insertNode(20);
+        insertNode(40);
+        insertNode(10);
+        insertNode(25);
+    }
+
+    // (task 3)
+    void inOrder(Node node) {
+        if (node != null) {
+            inOrder(node.left);
+            System.out.print(node.key + " ");
+            inOrder(node.right);
+        }
+    }
+
+    // (task 3)
+    void preOrder(Node node) {
+        if (node != null) {
+            System.out.print(node.key + " ");
+            preOrder(node.left);
+            preOrder(node.right);
+        }
+    }
+
+    // (task 3)
+    void postOrder(Node node) {
+        if (node != null) {
+            postOrder(node.left);
+            postOrder(node.right);
+            System.out.print(node.key + " ");
+        }
+    }
+
+    // (task 4)
+    int findMin() {
+        if (root == null) return -1;
+        Node curr = root;
+        while (curr.left != null)
+            curr = curr.left;
+        return curr.key;
+    }
+
+    // (task 4)
+    int findMax() {
+        if (root == null) return -1;
+        Node curr = root;
+        while (curr.right != null)
+            curr = curr.right;
+        return curr.key;
+    }
+
+    // (task 5)
+    int treeHeight() {
+        return height(root);
+    }
+
+    // (task 6)
+    int countNodes(Node node) {
+        if (node == null)
+            return 0;
+        return 1 + countNodes(node.left) + countNodes(node.right);
+    }
+
+    // (task 6)
+    int countLeafNodes(Node node) {
+        if (node == null)
+            return 0;
+        if (node.left == null && node.right == null)
+            return 1;
+        return countLeafNodes(node.left) + countLeafNodes(node.right);
+    }
+
+    // (task 6)
+    int countInternalNodes(Node node) {
+        if (node == null || (node.left == null && node.right == null))
+            return 0;
+        return 1 + countInternalNodes(node.left) + countInternalNodes(node.right);
+    }
+
+    public static void main(String[] args) {
+        All_Tasks tree = new All_Tasks();
+        tree.createSampleTree();
+        System.out.print("InOrder: ");
+        tree.inOrder(tree.root);
+        System.out.println();
+        System.out.print("PreOrder: ");
+        tree.preOrder(tree.root);
+        System.out.println();
+        System.out.print("PostOrder: ");
+        tree.postOrder(tree.root);
+        System.out.println();
+        System.out.println("Min: " + tree.findMin());
+        System.out.println("Max: " + tree.findMax());
+        System.out.println("Height: " + tree.treeHeight());
+        System.out.println("Total Nodes: " + tree.countNodes(tree.root));
+        System.out.println("Leaf Nodes: " + tree.countLeafNodes(tree.root));
+        System.out.println("Internal Nodes: " + tree.countInternalNodes(tree.root));
+    }
+}
+
+
+
+//////////////// GRAPHS  /////////////////////////////////////////////////////////////////////////////
+
+a. Breadth-First Search (BFS) – Queue Based
+void bfs(List<List<Integer>> graph, int start) {
+    boolean[] visited = new boolean[graph.size()];
+    Queue<Integer> q = new LinkedList<>();
+    visited[start] = true;
+    q.add(start);
+
+    while (!q.isEmpty()) {
+        int node = q.poll();
+        System.out.print(node + " ");
+        for (int neighbor : graph.get(node)) {
+            if (!visited[neighbor]) {
+                visited[neighbor] = true;
+                q.add(neighbor);
+            }
+        }
+    }
+}
+Time Complexity: O(V + E)
+
+b. Depth-First Search (DFS) – Recursive
+void dfs(List<List<Integer>> graph, int node, boolean[] visited) {
+    visited[node] = true;
+    System.out.print(node + " ");
+    for (int neighbor : graph.get(node)) {
+        if (!visited[neighbor]) {
+            dfs(graph, neighbor, visited);
+        }
+    }
+}
+Time Complexity: O(V + E)
+
+
+
+Scenario:
+You are creating a social network graph, where:
+•	Each person is a node
+•	A friendship is an undirected edge
+You will represent this using an adjacency list
+Perform:
+•	BFS to show all direct and indirect friends (like a social feed)
+•	DFS to find mutual connections (common friends between two users)
+
+
+Yeh raha implementation of showAllFriendsBFS aur findMutualFriends methods:
+
+
+import java.util.*;
+
+public class SocialNetworkGraph {
+    static Map<String, List<String>> graph = new HashMap<>();
+
+    // Add a person to the graph
+    public static void addPerson(String name) {
+        graph.putIfAbsent(name, new ArrayList<>());
+    }
+
+    // Add a friendship between two people (undirected)
+    public static void addFriendship(String a, String b) {
+        addPerson(a);
+        addPerson(b);
+        graph.get(a).add(b);
+        graph.get(b).add(a);
+    }
+
+    // Perform BFS traversal to show all reachable friends from the given person
+    public static void showAllFriendsBFS(String person) {
+        if (!graph.containsKey(person)) {
+            System.out.println("Person not found in the graph.");
+            return;
+        }
+
+        Set<String> visited = new HashSet<>();
+        Queue<String> queue = new LinkedList<>();
+
+        visited.add(person);
+        queue.add(person);
+
+        while (!queue.isEmpty()) {
+            String currentPerson = queue.poll();
+            System.out.print(currentPerson + " ");
+
+            for (String friend : graph.get(currentPerson)) {
+                if (!visited.contains(friend)) {
+                    visited.add(friend);
+                    queue.add(friend);
+                }
+            }
+        }
+    }
+
+    // Find mutual friends between two people
+    public static void findMutualFriends(String person1, String person2) {
+        if (!graph.containsKey(person1) || !graph.containsKey(person2)) {
+            System.out.println("One or both persons not found in the graph.");
+            return;
+        }
+
+        Set<String> friendsOfPerson1 = new HashSet<>(graph.get(person1));
+        Set<String> friendsOfPerson2 = new HashSet<>(graph.get(person2));
+
+        friendsOfPerson1.retainAll(friendsOfPerson2);
+
+        if (friendsOfPerson1.isEmpty()) {
+            System.out.println("No mutual friends found.");
+        } else {
+            System.out.println("Mutual friends: " + friendsOfPerson1);
+        }
+    }
+
+    public static void main(String[] args) {
+        // Graph setup (predefined friendships)
+        addFriendship("Ali", "Zara");
+        addFriendship("Ali", "Ahmed");
+        addFriendship("Zara", "Sara");
+        addFriendship("Ahmed", "Bilal");
+        addFriendship("Sara", "Bilal");
+        addFriendship("Sara", "Tania");
+
+        System.out.println("BFS Traversal starting from Ali:");
+        showAllFriendsBFS("Ali");
+
+        System.out.println("\nMutual friends of Sara and Ahmed:");
+        findMutualFriends("Sara", "Ahmed");
+    }
+}
+
+
+
+
+ ////   hashMAP /////////////////////////////////////////////////////////////////////
+import java.util.HashMap;
+import java.util.Map;
+
+public class HashMapExample {
+    public static void main(String[] args) {
+        HashMap<Integer, String> map = new HashMap<>();
+
+        map.put(1, "Apple");
+        map.put(2, "Banana");
+        map.put(3, "Cherry");
+
+        System.out.println(map.get(2));
+        System.out.println(map.containsKey(3));
+        System.out.println(map.containsValue("Apple"));
+        System.out.println(map.size());
+
+        map.remove(1);
+        System.out.println(map);
+
+        map.replace(2, "Blueberry");
+        System.out.println(map);
+
+        System.out.println(map.keySet());
+        System.out.println(map.values());
+
+        for (Map.Entry<Integer, String> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+
+        map.clear();
+        System.out.println(map);
+    }
+}
+
+
+///////////  HashSet /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import java.util.HashSet;
+
+public class HashSetExample {
+    public static void main(String[] args) {
+        HashSet<String> set = new HashSet<>();
+
+        set.add("Apple");
+        set.add("Banana");
+        set.add("Cherry");
+        set.add("Apple");
+
+        System.out.println(set.contains("Banana"));
+
+        set.remove("Cherry");
+        System.out.println(set);
+
+        System.out.println(set.size());
+        System.out.println(set.isEmpty());
+
+        for (String fruit : set) {
+            System.out.println(fruit);
+        }
+
+        set.clear();
+        System.out.println(set);
+    }
+}
+
+
+
+//////  chaining //////////////////////////////////////
+Yeh raha implementation of Hashtable class in Java:
+
+
+public class Node {
+    int data;
+    Node next;
+
+    public Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+public class Hashtable {
+    private Node[] arr;
+    private int n;
+
+    public Hashtable(int size) {
+        n = size;
+        arr = new Node[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = null;
+        }
+    }
+
+    private int hashFunction(int key) {
+        return key % n;
+    }
+
+    public void insert(int key) {
+        Node newNode = new Node(key);
+        int index = hashFunction(key);
+        if (arr[index] == null) {
+            arr[index] = newNode;
+        } else {
+            Node temp = arr[index];
+            while (temp.next != null) {
+                temp = temp.next;
+            }
+            temp.next = newNode;
+        }
+    }
+
+    public static void main(String[] args) {
+        Hashtable hashtable = new Hashtable(10);
+        hashtable.insert(5);
+        hashtable.insert(15);
+        hashtable.insert(25);
+    }
+}
+
+
+
+//////////// adjancy list/////////////////////////////////////////////////////////////
+
+import java.util.*;
+
+public class Graph {
+    private Map<Integer, List<Integer>> adjList;
+
+    public Graph() {
+        adjList = new HashMap<>();
+    }
+
+    public void addEdge(int src, int dest) {
+        adjList.putIfAbsent(src, new ArrayList<>());
+        adjList.get(src).add(dest);
+    }
+
+    public void printAdjList() {
+        for (int node : adjList.keySet()) {
+            System.out.print(node + " -> ");
+            for (int neighbor : adjList.get(node)) {
+                System.out.print(neighbor + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public void bfs(int start) {
+        Set<Integer> visited = new HashSet<>();
+        Queue<Integer> queue = new LinkedList<>();
+
+        visited.add(start);
+        queue.add(start);
+
+        System.out.print("BFS: ");
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            System.out.print(current + " ");
+
+            if (adjList.containsKey(current)) {
+                for (int neighbor : adjList.get(current)) {
+                    if (!visited.contains(neighbor)) {
+                        visited.add(neighbor);
+                        queue.add(neighbor);
+                    }
+                }
+            }
+        }
+        System.out.println();
+    }
+
+    public void dfs(int start) {
+        Set<Integer> visited = new HashSet<>();
+        System.out.print("DFS: ");
+        dfsHelper(start, visited);
+        System.out.println();
+    }
+
+    private void dfsHelper(int node, Set<Integer> visited) {
+        visited.add(node);
+        System.out.print(node + " ");
+
+        if (adjList.containsKey(node)) {
+            for (int neighbor : adjList.get(node)) {
+                if (!visited.contains(neighbor)) {
+                    dfsHelper(neighbor, visited);
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Graph g = new Graph();
+
+        g.addEdge(0, 1);
+        g.addEdge(0, 2);
+        g.addEdge(1, 3);
+        g.addEdge(1, 4);
+        g.addEdge(2, 5);
+        g.addEdge(4, 5);
+
+        g.printAdjList();
+
+        g.bfs(0);
+        g.dfs(0);
+    }
+}
