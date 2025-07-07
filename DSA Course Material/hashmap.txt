@@ -1,0 +1,15 @@
+public void HashMap() {
+    HashMap<String, Integer> map = new HashMap<>();
+
+    map.put("apple", 3);
+    map.put("banana", 2);
+
+    int count = map.get("apple");
+
+    if (map.containsKey("banana")) {
+        System.out.println("Banana exists");
+    }
+    for (Map.Entry<String, Integer> entry : map.entrySet()) {
+        System.out.println(entry.getKey() + " -> " + entry.getValue());
+    }
+}

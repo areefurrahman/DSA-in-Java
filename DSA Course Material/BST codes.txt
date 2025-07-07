@@ -1,0 +1,78 @@
+public Node insert(Node root, int key) {
+    if (root == null) {
+        return new Node(key);
+    }
+    if (key < root.data) {
+        root.left = insert(root.left, key);
+    } else if (key > root.data) {
+        root.right = insert(root.right, key);
+    }
+    return root;
+}
+
+
+public boolean search(Node root, int key) {
+    if (root == null) return false;
+    if (root.data == key) return true;
+    if (key < root.data)
+        return search(root.left, key);
+    else
+        return search(root.right, key);
+}
+
+
+
+public Node delete(Node root, int key) {
+    if (root == null) return null;
+
+    if (key < root.data) {
+        root.left = delete(root.left, key);
+    } else if (key > root.data) {
+        root.right = delete(root.right, key);
+    } else {
+        if (root.left == null)
+            return root.right;
+        else if (root.right == null)
+            return root.left;
+
+        root.data = minValue(root.right);
+        root.right = delete(root.right, root.data);
+    }
+    return root;
+}
+
+private int minValue(Node root) {
+    int minv = root.data;
+    while (root.left != null) {
+        minv = root.left.data;
+        root = root.left;
+    }
+    return minv;
+}
+
+
+public void inorder(Node root) {
+    if (root != null) {
+        inorder(root.left);
+        System.out.print(root.data + " ");
+        inorder(root.right);
+    }
+}
+
+
+public void preorder(Node root) {
+    if (root != null) {
+        System.out.print(root.data + " ");
+        preorder(root.left);
+        preorder(root.right);
+    }
+}
+
+
+public void postorder(Node root) {
+    if (root != null) {
+        postorder(root.left);
+        postorder(root.right);
+        System.out.print(root.data + " ");
+    }
+}

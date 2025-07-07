@@ -1,0 +1,78 @@
+TreeMap is a part of the Java Collection Framework. It implements the Map and NavigableMap interface and extends the AbstractMap class. It stores key-value pairs in a sorted order based on the natural ordering of keys or a custom Comparator. It uses a Red-Black Tree for efficient operations (add, remove, retrieve) with a time complexity of O(log n).
+
+The keys in a TreeMap are always sorted.
+Most operations, such as get, put, and remove have a time complexity of O(log n).
+TreeMap does not allow null as a key, it allows null as a value. Attempting to insert a null key will result in NullPointerException.
+TreeMap is not Synchronized. For thread-safe operations, we need to use Collections.synchronized map.
+Entry pairs returned by the methods in this class and their views represent snapshots of mappings at the time they were produced. They do not support the Entry.setValue method.
+
+// Java Program to create a TreeMap
+import java.util.Map;
+import java.util.TreeMap;
+
+public class TreeMapCreation {
+    public static void main(String args[])
+    {
+        // Create a TreeMap of Strings 
+        // (keys) and Integers (values)
+        TreeMap<String, Integer> tm = new TreeMap<>();
+
+        System.out.println("TreeMap elements: " + tm);
+    }
+}
+
+// Performing basic operations on TreeMap
+import java.util.Map;
+import java.util.TreeMap;
+
+public class Geeks {
+    public static void main(String[] args)
+    {
+        Map<String, Integer> tm = new TreeMap<>();
+
+        // Adding elements to the tree map
+        tm.put("A", 1);
+        tm.put("C", 3);
+        tm.put("B", 2);
+
+        // Getting values from the tree map
+        int ans = tm.get("A");
+        System.out.println("Value of A: " + ans);
+
+        // Removing elements from the tree map
+        tm.remove("B");
+
+        // Iterating over the elements of the tree map
+        for (String key : tm.keySet()) {
+            System.out.println("Key: " + key + ", Value: "
+                               + tm.get(key));
+        }
+    }
+}
+
+
+
+
+
+TreeSet is one of the most important implementations of the SortedSet interface in Java that uses a Tree(red - black tree) for storage. The ordering of the elements is maintained by a set using their natural ordering whether or not an explicit comparator is provided. This must be consistent with equals if it is to correctly implement the Set interface. 
+
+TreeSet does not allow duplicate elements. Any attempt to add a duplicate element will be ignored.
+It doesn't allow null values and throws NullPointerException null element is inserted in it.
+TreeSet implements the NavigableSet interface and provides additional methods to navigate the set (e.g., higher(), lower(), ceiling(), and floor()).
+
+
+
+// Java Program Implementing TreeSet
+import java.util.TreeSet;
+
+public class TreeSetCreation 
+{
+    public static void main(String args[]) 
+    {
+        // Create a TreeSet of Strings
+        TreeSet<String> t = new TreeSet<>();
+        
+        // Displaying the TreeSet (which is empty at this point)
+        System.out.println("TreeSet elements: " + t);
+    }
+}

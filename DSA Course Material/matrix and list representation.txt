@@ -1,0 +1,26 @@
+Matrix Representation:
+
+int[][] adjMatrix = new int[vertices][vertices];
+
+// Add edge from u to v
+adjMatrix[u][v] = 1;
+
+// For undirected graph, also add reverse edge
+adjMatrix[v][u] = 1;
+
+
+
+
+List Representation:
+
+List<List<Integer>> adjList = new ArrayList<>();
+
+for (int i = 0; i < vertices; i++) {
+    adjList.add(new ArrayList<>());
+}
+
+// Add edge from u to v
+adjList.get(u).add(v);
+
+// For undirected graph, also add reverse edge
+adjList.get(v).add(u);

@@ -1,0 +1,12 @@
+public void HashSet() {
+    HashSet<String> set = new HashSet<>();
+
+    set.add("apple");
+    set.add("banana");
+    if (set.contains("apple")) {
+        System.out.println("Apple is in the set");
+    }
+    for (String item : set) {
+        System.out.println(item);
+    }
+}
